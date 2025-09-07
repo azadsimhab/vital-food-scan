@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Smartphone, Download, ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const CTASection = () => {
   return (
@@ -43,13 +44,15 @@ const CTASection = () => {
           {/* Web App Access */}
           <div className="flex items-center justify-center gap-2 text-white/80">
             <span>Or</span>
-            <Button 
-              variant="link" 
-              className="text-white hover:text-white/80 p-0 h-auto underline-offset-4"
-            >
-              Try the Web App
-              <ArrowRight className="w-4 h-4 ml-1" />
-            </Button>
+            <Link to="/dashboard">
+              <Button 
+                variant="link" 
+                className="text-white hover:text-white/80 p-0 h-auto underline-offset-4"
+              >
+                Try the Web App
+                <ArrowRight className="w-4 h-4 ml-1" />
+              </Button>
+            </Link>
           </div>
 
           {/* Trust Indicators */}
