@@ -1,77 +1,122 @@
-import { Camera, Shield, BarChart3, GitCompare, Smartphone, TrendingUp } from "lucide-react";
+import { Camera, Shield, BarChart3, GitCompare, Smartphone, TrendingUp, Leaf, Heart, Brain } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import allergenImage from "@/assets/allergen-icons.jpg";
 import nutritionImage from "@/assets/nutrition-dashboard.jpg";
+import { useState, useEffect } from "react";
+import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 
 const FeaturesSection = () => {
+  const { elementRef: ref, isVisible } = useIntersectionObserver({ threshold: 0.1 });
+  
   const features = [
     {
       icon: Camera,
-      title: "Smart Food Scanning",
-      description: "Point your camera at any food product and get instant, detailed analysis powered by advanced AI technology.",
-      color: "text-primary"
+      title: "AI-Powered Scanning",
+      description: "Instantly analyze any food product with our advanced computer vision technology that recognizes thousands of items.",
+      color: "text-primary",
+      gradient: "from-primary/20 to-primary/5",
+      badge: "AI-Powered"
+    },
+    {
+      icon: Leaf,
+      title: "Ayurvedic Wisdom",
+      description: "5,000 years of traditional knowledge meets modern science to provide personalized dosha-based recommendations.",
+      color: "text-accent",
+      gradient: "from-accent/20 to-accent/5",
+      badge: "Traditional"
     },
     {
       icon: Shield,
-      title: "Allergen Detection",
-      description: "Comprehensive identification of 50+ allergens with personalized warnings based on your dietary restrictions.",
-      color: "text-destructive"
+      title: "Allergen Guardian",
+      description: "Comprehensive protection with real-time alerts for 50+ allergens based on your personal health profile.",
+      color: "text-destructive",
+      gradient: "from-destructive/20 to-destructive/5",
+      badge: "Health Shield"
     },
     {
-      icon: BarChart3,
-      title: "Nutritional Analysis",
-      description: "Get detailed breakdown of calories, macros, vitamins, and minerals with easy-to-understand visualizations.",
-      color: "text-accent"
+      icon: Brain,
+      title: "Smart Recommendations",
+      description: "Personalized suggestions based on your constitution, health goals, and dietary preferences using WHO/FAO standards.",
+      color: "text-primary",
+      gradient: "from-primary/20 to-primary/5",
+      badge: "Personalized"
     },
     {
-      icon: GitCompare,
-      title: "Product Comparison",
-      description: "Compare multiple products side by side to make informed choices that align with your health goals.",
-      color: "text-primary"
-    },
-    {
-      icon: Smartphone,
-      title: "Cross-Platform Access",
-      description: "Available on Android, iOS, and Web. Your data syncs seamlessly across all your devices.",
-      color: "text-primary"
+      icon: Heart,
+      title: "Holistic Health",
+      description: "Track not just nutrition but overall well-being with mind-body balance insights from Ayurvedic principles.",
+      color: "text-accent",
+      gradient: "from-accent/20 to-accent/5",
+      badge: "Wellness"
     },
     {
       icon: TrendingUp,
-      title: "Daily Nutrition Tracking",
-      description: "Monitor your daily nutritional intake with personalized recommendations and progress tracking.",
-      color: "text-accent"
+      title: "Progress Analytics",
+      description: "Beautiful visualizations of your health journey with actionable insights and milestone celebrations.",
+      color: "text-primary",
+      gradient: "from-primary/20 to-primary/5",
+      badge: "Analytics"
     }
   ];
 
   return (
-    <section className="py-20 px-4 bg-gradient-to-b from-background to-secondary/20">
-      <div className="container mx-auto">
+    <section ref={ref} className="py-20 px-4 bg-gradient-to-b from-background via-secondary/5 to-background relative overflow-hidden">
+      {/* Background decorations */}
+      <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
+        <div className="absolute top-20 left-10 w-32 h-32 bg-primary/5 rounded-full blur-2xl"></div>
+        <div className="absolute bottom-20 right-10 w-40 h-40 bg-accent/5 rounded-full blur-2xl"></div>
+      </div>
+      
+      <div className="container mx-auto relative z-10">
         {/* Section Header */}
-        <div className="text-center mb-16 animate-slide-up">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
-            Powerful Features for
-            <span className="bg-gradient-primary bg-clip-text text-transparent"> Smart Eating</span>
+        <div className={`text-center mb-20 transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
+          <Badge variant="outline" className="mb-6 px-4 py-2 text-sm font-medium border-primary/30 text-primary">
+            ✨ Award-Winning Technology
+          </Badge>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight">
+            Where Ancient Wisdom Meets
+            <span className="block bg-gradient-hero bg-clip-text text-transparent"> Modern Intelligence</span>
           </h2>
-          <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-            Our comprehensive suite of AI-powered tools helps you make informed food choices, 
-            avoid allergens, and maintain a healthy lifestyle with confidence.
+          <p className="text-lg md:text-xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
+            Experience the perfect fusion of 5,000-year-old Ayurvedic knowledge and cutting-edge AI technology. 
+            Our intelligent platform doesn't just analyze food—it understands your unique constitution and guides you toward optimal health.
           </p>
         </div>
 
         {/* Features Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
           {features.map((feature, index) => (
             <Card 
               key={feature.title}
-              className="bg-gradient-card border-0 shadow-card hover:shadow-float transition-all duration-300 hover:scale-105 animate-bounce-in"
-              style={{ animationDelay: `${index * 0.1}s` }}
+              className={`group relative overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-105 bg-gradient-to-br ${feature.gradient} backdrop-blur-sm ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}
+              style={{ 
+                transitionDelay: `${index * 150}ms`
+              }}
             >
-              <CardContent className="p-6 text-center">
-                <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full bg-background shadow-card mb-4 ${feature.color}`}>
-                  <feature.icon className="w-8 h-8" />
+              {/* Hover effect overlay */}
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              
+              <CardContent className="relative p-8 text-center">
+                {/* Feature badge */}
+                <Badge 
+                  variant="secondary" 
+                  className="absolute top-4 right-4 text-xs font-medium bg-background/80 backdrop-blur-sm"
+                >
+                  {feature.badge}
+                </Badge>
+                
+                {/* Icon with gradient background */}
+                <div className={`relative inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-background to-secondary/50 shadow-lg mb-6 group-hover:scale-110 transition-transform duration-300 ${feature.color}`}>
+                  <feature.icon className="w-10 h-10" />
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-primary opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
                 </div>
-                <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
-                <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
+                
+                <h3 className="text-xl font-bold mb-4 text-foreground">{feature.title}</h3>
+                <p className="text-muted-foreground leading-relaxed text-sm">{feature.description}</p>
+                
+                {/* Bottom decoration */}
+                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-primary scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
               </CardContent>
             </Card>
           ))}

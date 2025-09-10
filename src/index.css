@@ -187,6 +187,37 @@ All colors MUST be HSL.
     animation: slide-up 0.5s ease-out;
   }
 
+  /* Mobile-optimized spacing and typography */
+  @media (max-width: 768px) {
+    .container {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+    
+    /* Enhanced mobile readability */
+    h1, h2, h3 {
+      line-height: 1.2;
+    }
+    
+    /* Better touch targets for mobile */
+    button, a {
+      min-height: 44px;
+      min-width: 44px;
+    }
+  }
+  
+  /* Enhanced glassmorphism effects */
+  .backdrop-blur-glass {
+    backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .dark .backdrop-blur-glass {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
   /* Accessibility improvements */
   *:focus-visible {
     outline: 2px solid hsl(var(--primary));
