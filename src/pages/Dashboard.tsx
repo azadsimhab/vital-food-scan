@@ -4,10 +4,15 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { useNavigate } from "react-router-dom";
+import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 
 const Dashboard = () => {
   const [scannedToday] = useState(3);
   const [compatibilityScore] = useState(78);
+  const navigate = useNavigate();
+  const { elementRef: statsRef, isVisible: statsVisible } = useIntersectionObserver();
+  const { elementRef: insightsRef, isVisible: insightsVisible } = useIntersectionObserver();
 
   const recentScans = [
     { name: "Organic Quinoa", compatibility: 92, time: "2 hours ago", type: "Vata-friendly" },
@@ -24,26 +29,38 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-secondary/20 to-background p-4 pb-20">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6 pt-12">
+      <header className="flex items-center justify-between mb-6 pt-12" role="banner">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Namaste 🙏</h1>
           <p className="text-muted-foreground">Your wellness journey continues</p>
         </div>
-        <div className="w-12 h-12 bg-gradient-primary rounded-full flex items-center justify-center">
-          <span className="text-primary-foreground font-semibold">AK</span>
-        </div>
-      </div>
+        <button 
+          className="w-12 h-12 bg-gradient-primary rounded-full flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-transform duration-200 hover:scale-105"
+          aria-label="User profile"
+          onClick={() => navigate('/profile')}
+        >
+          <span className="text-primary-foreground font-semibold" aria-hidden="true">AK</span>
+        </button>
+      </header>
 
       {/* Quick Stats */}
-      <div className="grid grid-cols-2 gap-4 mb-6">
+      <section 
+        ref={statsRef as any}
+        className={`grid grid-cols-2 gap-4 mb-6 transition-all duration-700 ${
+          statsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+        }`}
+        aria-label="Daily statistics"
+      >
         <Card className="bg-gradient-card border-0 shadow-card">
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center" aria-hidden="true">
                 <Camera className="w-5 h-5 text-primary" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-foreground">{scannedToday}</p>
+                <p className="text-2xl font-bold text-foreground" aria-label={`${scannedToday} scans completed today`}>
+                  {scannedToday}
+                </p>
                 <p className="text-sm text-muted-foreground">Scans today</p>
               </div>
             </div>
@@ -53,42 +70,53 @@ const Dashboard = () => {
         <Card className="bg-gradient-card border-0 shadow-card">
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-accent/10 rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 bg-accent/10 rounded-lg flex items-center justify-center" aria-hidden="true">
                 <Star className="w-5 h-5 text-accent" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-foreground">{compatibilityScore}%</p>
+                <p className="text-2xl font-bold text-foreground" aria-label={`${compatibilityScore}% food compatibility score`}>
+                  {compatibilityScore}%
+                </p>
                 <p className="text-sm text-muted-foreground">Compatibility</p>
               </div>
             </div>
           </CardContent>
         </Card>
-      </div>
+      </section>
 
       {/* Scan Button */}
       <Card className="bg-gradient-primary border-0 shadow-float mb-6 overflow-hidden relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-transparent" aria-hidden="true" />
         <CardContent className="p-6 relative">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-semibold text-primary-foreground mb-1">
+              <h2 className="text-lg font-semibold text-primary-foreground mb-1">
                 Scan Your Food
-              </h3>
+              </h2>
               <p className="text-primary-foreground/80 text-sm">
                 Discover ancient wisdom for modern nutrition
               </p>
             </div>
             <Button 
               size="lg" 
-              className="bg-white/20 hover:bg-white/30 text-primary-foreground border-white/30 rounded-full w-16 h-16"
+              onClick={() => navigate('/scanner')}
+              className="bg-white/20 hover:bg-white/30 text-primary-foreground border-white/30 rounded-full w-16 h-16 transition-transform duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-primary"
+              aria-label="Start scanning food products"
             >
-              <Camera className="w-8 h-8" />
+              <Camera className="w-8 h-8" aria-hidden="true" />
             </Button>
           </div>
         </CardContent>
       </Card>
 
       {/* Ayurvedic Insights */}
+      <section 
+        ref={insightsRef as any}
+        className={`transition-all duration-700 ${
+          insightsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+        }`}
+        aria-label="Daily Ayurvedic insights"
+      >
       <Card className="bg-gradient-card border-0 shadow-card mb-6">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-foreground">
@@ -110,6 +138,7 @@ const Dashboard = () => {
           ))}
         </CardContent>
       </Card>
+      </section>
 
       {/* Recent Scans */}
       <Card className="bg-gradient-card border-0 shadow-card">

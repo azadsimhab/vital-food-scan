@@ -1,9 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Leaf, Menu, X } from "lucide-react";
 import { useState } from "react";
+import ThemeToggle from "./ThemeToggle";
+import { useKeyboardNavigation } from "@/hooks/useKeyboardNavigation";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  
+  useKeyboardNavigation(() => setIsMenuOpen(false));
 
   const navLinks = [
     { href: "#features", label: "Features" },
@@ -13,8 +17,8 @@ const Header = () => {
   ];
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border">
-      <nav className="container mx-auto px-4 h-16 flex items-center justify-between">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border" role="banner">
+      <nav className="container mx-auto px-4 h-16 flex items-center justify-between" role="navigation" aria-label="Main navigation">
         {/* Logo */}
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-lg bg-gradient-primary flex items-center justify-center">
@@ -38,6 +42,7 @@ const Header = () => {
 
         {/* Desktop CTA */}
         <div className="hidden md:flex items-center gap-4">
+          <ThemeToggle />
           <Button variant="ghost" size="sm">
             Sign In
           </Button>
@@ -52,6 +57,9 @@ const Header = () => {
           size="icon"
           className="md:hidden"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
+          aria-expanded={isMenuOpen}
+          aria-controls="mobile-menu"
+          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
         >
           {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </Button>
@@ -59,7 +67,11 @@ const Header = () => {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="md:hidden bg-background/95 backdrop-blur-lg border-b border-border animate-slide-up">
+        <div 
+          id="mobile-menu"
+          className="md:hidden bg-background/95 backdrop-blur-lg border-b border-border animate-slide-up"
+          role="menu"
+        >
           <div className="container mx-auto px-4 py-4 space-y-4">
             {navLinks.map((link) => (
               <a
@@ -71,7 +83,10 @@ const Header = () => {
                 {link.label}
               </a>
             ))}
-            <div className="pt-4 space-y-2">
+            <div className="pt-4 space-y-2 border-t border-border">
+              <div className="flex justify-center pb-2">
+                <ThemeToggle />
+              </div>
               <Button variant="ghost" size="sm" className="w-full justify-start">
                 Sign In
               </Button>

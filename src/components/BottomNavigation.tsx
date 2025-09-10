@@ -11,21 +11,26 @@ const BottomNavigation = () => {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border z-50">
+    <nav 
+      className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border z-50"
+      role="navigation"
+      aria-label="Bottom navigation"
+    >
       <div className="flex items-center justify-around py-2 px-4 max-w-md mx-auto">
         {navItems.map((item) => (
           <NavLink
             key={item.path}
             to={item.path}
             className={({ isActive }) =>
-              `flex flex-col items-center py-2 px-3 rounded-lg transition-all duration-200 min-w-0 ${
+              `flex flex-col items-center py-2 px-3 rounded-lg transition-all duration-200 min-w-0 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
                 isActive
                   ? "text-primary bg-primary/10"
                   : "text-muted-foreground hover:text-foreground"
               }`
             }
+            aria-label={`Navigate to ${item.label}`}
           >
-            <item.icon className="w-5 h-5 mb-1" />
+            <item.icon className="w-5 h-5 mb-1" aria-hidden="true" />
             <span className="text-xs font-medium truncate">{item.label}</span>
           </NavLink>
         ))}
