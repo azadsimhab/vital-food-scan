@@ -1,24 +1,35 @@
 import { useState } from "react";
-import { ArrowLeft, Heart, AlertTriangle, TrendingUp, Leaf, Star, Share2, Bookmark } from "lucide-react";
+import { ArrowLeft, Heart, Share, Camera, Home, AlertTriangle, CheckCircle, XCircle, Lightbulb, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useNavigate } from "react-router-dom";
+import { useKeyboardNavigation } from "@/hooks/useKeyboardNavigation";
 
 const FoodAnalysis = () => {
+  const [isSaved, setIsSaved] = useState(false);
   const navigate = useNavigate();
-  const [saved, setSaved] = useState(false);
+  
+  useKeyboardNavigation(() => navigate(-1));
 
-  const foodData = {
-    name: "Organic Quinoa",
-    brand: "Nature's Choice",
-    compatibilityScore: 92,
-    dosha: "Vata-Balancing",
-    category: "Ancient Grains",
-    image: "/api/placeholder/300/200"
-  };
+  const compatibilityScore = 89;
+  const allergenWarnings = [
+    { name: "Gluten", severity: "high", message: "Contains wheat-based ingredients" },
+    { name: "Dairy", severity: "medium", message: "May contain trace amounts" }
+  ];
+
+  const healthConcerns = [
+    { type: "High Sodium", level: "warning", description: "Above recommended daily intake" },
+    { type: "Added Sugars", level: "caution", description: "Contains 8g added sugars" }
+  ];
+
+  const alternatives = [
+    { name: "Organic Quinoa Bowl", score: 95, reason: "Higher protein, gluten-free" },
+    { name: "Brown Rice Salad", score: 87, reason: "Lower sodium, more fiber" },
+    { name: "Lentil Curry", score: 92, reason: "Plant-based protein, ayurvedic spices" }
+  ];
 
   const nutritionalData = [
     { label: "Protein", value: 14.1, unit: "g", daily: 28 },
@@ -48,206 +59,263 @@ const FoodAnalysis = () => {
     }
   ];
 
-  const healthBenefits = [
-    "Complete protein source with all 9 essential amino acids",
-    "Rich in antioxidants and flavonoids",
-    "Supports digestive health with natural fiber",
-    "Gluten-free and easily digestible"
-  ];
-
-  const warnings = [
-    {
-      type: "Kapha Excess",
-      message: "Consume in moderation if you have Kapha imbalance",
-      severity: "low"
-    }
-  ];
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-secondary/20 to-background">
+    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-accent/5 p-4 pb-20">
       {/* Header */}
-      <div className="flex items-center justify-between p-4 pt-12 bg-gradient-to-b from-background to-transparent relative z-10">
+      <header className="flex items-center justify-between mb-6 pt-12">
         <Button 
           variant="ghost" 
           size="icon"
           onClick={() => navigate(-1)}
-          className="rounded-full"
+          className="focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+          aria-label="Go back to previous page"
         >
           <ArrowLeft className="w-5 h-5" />
         </Button>
-        <h1 className="text-lg font-semibold text-foreground">Food Analysis</h1>
-        <div className="flex gap-2">
-          <Button 
-            variant="ghost" 
-            size="icon"
-            onClick={() => setSaved(!saved)}
-            className="rounded-full"
-          >
-            <Bookmark className={`w-5 h-5 ${saved ? 'fill-current text-primary' : ''}`} />
-          </Button>
-          <Button variant="ghost" size="icon" className="rounded-full">
-            <Share2 className="w-5 h-5" />
-          </Button>
-        </div>
-      </div>
+        <h1 className="text-lg font-semibold text-foreground">Scan Results</h1>
+        <Button variant="ghost" size="icon">
+          <Share className="w-5 h-5" />
+        </Button>
+      </header>
 
-      <div className="px-4 pb-20">
-        {/* Food Header */}
-        <Card className="bg-gradient-card border-0 shadow-card mb-6">
-          <CardContent className="p-6">
-            <div className="flex items-start gap-4">
-              <div className="w-20 h-20 bg-muted rounded-2xl flex items-center justify-center">
-                <Leaf className="w-10 h-10 text-primary" />
+      {/* Enhanced Food Item Header with Circular Score */}
+      <Card className="bg-gradient-card border-0 shadow-elegant mb-6 backdrop-blur-sm">
+        <CardContent className="p-6">
+          <div className="flex items-start gap-4">
+            <div className="w-20 h-20 bg-gradient-to-br from-secondary to-secondary/80 rounded-xl flex items-center justify-center shadow-md">
+              <span className="text-xs text-muted-foreground font-medium">IMG</span>
+            </div>
+            <div className="flex-1">
+              <h2 className="text-xl font-bold text-foreground mb-1">Organic Quinoa Bowl</h2>
+              <p className="text-muted-foreground text-sm mb-3">Ancient Grains Co.</p>
+              <div className="flex items-center gap-2 mb-3">
+                <Badge className="bg-green-100 text-green-800 border-green-200">Vata-friendly</Badge>
+                <Badge variant="secondary" className="text-xs">Organic</Badge>
               </div>
-              <div className="flex-1">
-                <h2 className="text-xl font-bold text-foreground mb-1">{foodData.name}</h2>
-                <p className="text-muted-foreground mb-2">{foodData.brand}</p>
-                <div className="flex gap-2">
-                  <Badge className="bg-primary/10 text-primary">{foodData.dosha}</Badge>
-                  <Badge variant="secondary">{foodData.category}</Badge>
+            </div>
+            
+            {/* Circular Score Display */}
+            <div className="flex flex-col items-center gap-2">
+              <div className="relative w-16 h-16">
+                <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 36 36">
+                  <path
+                    className="text-secondary/30"
+                    stroke="currentColor"
+                    strokeWidth="3"
+                    fill="none"
+                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                  />
+                  <path
+                    className="text-green-500"
+                    stroke="currentColor"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    fill="none"
+                    strokeDasharray={`${compatibilityScore}, 100`}
+                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                  />
+                </svg>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="text-lg font-bold text-foreground">{compatibilityScore}</span>
                 </div>
               </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-primary mb-1">{foodData.compatibilityScore}%</div>
-                <div className="text-xs text-muted-foreground">Compatibility</div>
-              </div>
+              <Button
+                variant={isSaved ? "default" : "outline"}
+                size="sm"
+                onClick={() => setIsSaved(!isSaved)}
+                className="w-10 h-10 rounded-full p-0"
+              >
+                <Heart className={`w-4 h-4 ${isSaved ? 'fill-current' : ''}`} />
+              </Button>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </CardContent>
+      </Card>
 
-        {/* Compatibility Score */}
-        <Card className="bg-gradient-primary border-0 shadow-float mb-6">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-primary-foreground">
-                Ayurvedic Compatibility
-              </h3>
-              <Star className="w-6 h-6 text-primary-foreground" />
-            </div>
-            <Progress value={foodData.compatibilityScore} className="mb-4 h-3" />
-            <p className="text-primary-foreground/90 text-sm">
-              Excellent match for your constitution. This ancient grain aligns beautifully with Ayurvedic principles of balanced nutrition.
-            </p>
-          </CardContent>
-        </Card>
-
-        {/* Warnings */}
-        {warnings.length > 0 && (
-          <Card className="bg-warning/10 border-warning/20 mb-6">
-            <CardContent className="p-4">
-              <div className="flex items-start gap-3">
-                <AlertTriangle className="w-5 h-5 text-warning mt-0.5" />
+      {/* Allergen Warnings */}
+      {allergenWarnings.length > 0 && (
+        <Card className="bg-gradient-to-r from-red-50 to-orange-50 border-red-200 shadow-elegant mb-6">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-red-800">
+              <AlertTriangle className="w-5 h-5" />
+              Allergen Warnings
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {allergenWarnings.map((warning, index) => (
+              <div key={index} className="flex items-center gap-3 p-3 bg-white/60 rounded-lg">
+                <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                  warning.severity === 'high' ? 'bg-red-100' : 'bg-yellow-100'
+                }`}>
+                  <XCircle className={`w-4 h-4 ${
+                    warning.severity === 'high' ? 'text-red-600' : 'text-yellow-600'
+                  }`} />
+                </div>
                 <div>
-                  <h4 className="font-medium text-warning-foreground mb-1">
-                    Gentle Reminder
-                  </h4>
-                  {warnings.map((warning, index) => (
-                    <p key={index} className="text-sm text-warning-foreground/80">
-                      {warning.message}
-                    </p>
-                  ))}
+                  <p className="font-medium text-red-900">{warning.name}</p>
+                  <p className="text-sm text-red-700">{warning.message}</p>
                 </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Health Concerns */}
+      {healthConcerns.length > 0 && (
+        <Card className="bg-gradient-to-r from-yellow-50 to-amber-50 border-yellow-200 shadow-elegant mb-6">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-yellow-800">
+              <AlertTriangle className="w-5 h-5" />
+              Health Considerations
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {healthConcerns.map((concern, index) => (
+              <div key={index} className="flex items-center gap-3 p-3 bg-white/60 rounded-lg">
+                <div className="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
+                  <AlertTriangle className="w-4 h-4 text-yellow-600" />
+                </div>
+                <div>
+                  <p className="font-medium text-yellow-900">{concern.type}</p>
+                  <p className="text-sm text-yellow-700">{concern.description}</p>
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Alternatives Card */}
+      <Card className="bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 shadow-elegant mb-6">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-green-800">
+            <Lightbulb className="w-5 h-5" />
+            Better Alternatives
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          {alternatives.map((alt, index) => (
+            <div key={index} className="flex items-center justify-between p-3 bg-white/60 rounded-lg">
+              <div className="flex-1">
+                <h4 className="font-medium text-green-900">{alt.name}</h4>
+                <p className="text-sm text-green-700">{alt.reason}</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="text-right">
+                  <div className="flex items-center gap-1">
+                    <Star className="w-3 h-3 text-green-600" />
+                    <span className="text-sm font-bold text-green-800">{alt.score}%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </CardContent>
+      </Card>
+
+      {/* Detailed Analysis Tabs */}
+      <Tabs defaultValue="nutrition" className="space-y-4 mb-6">
+        <TabsList className="grid w-full grid-cols-3 bg-secondary/50">
+          <TabsTrigger value="nutrition">Nutrition</TabsTrigger>
+          <TabsTrigger value="ayurvedic">Ayurvedic</TabsTrigger>
+          <TabsTrigger value="benefits">Benefits</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="nutrition" className="space-y-4">
+          <Card className="bg-gradient-card border-0 shadow-elegant backdrop-blur-sm">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-foreground">
+                <Star className="w-5 h-5 text-primary" />
+                Nutritional Profile
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {nutritionalData.map((nutrient, index) => (
+                <div key={index} className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-foreground font-medium">{nutrient.label}</span>
+                    <span className="text-muted-foreground">
+                      {nutrient.value}{nutrient.unit} ({nutrient.daily}% DV)
+                    </span>
+                  </div>
+                  <Progress value={nutrient.daily} className="h-2" />
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="ayurvedic" className="space-y-4">
+          <Card className="bg-gradient-card border-0 shadow-elegant backdrop-blur-sm">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-foreground">
+                <Star className="w-5 h-5 text-primary" />
+                Ancient Wisdom Analysis
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {ayurvedicInsights.map((insight, index) => (
+                <div key={index} className="flex items-start gap-4 p-4 rounded-lg bg-secondary/30">
+                  <span className="text-2xl">{insight.icon}</span>
+                  <div className="flex-1">
+                    <h4 className="font-medium text-foreground mb-1">{insight.aspect}</h4>
+                    <p className="text-sm text-primary font-medium mb-1">{insight.value}</p>
+                    <p className="text-xs text-muted-foreground">{insight.impact}</p>
+                  </div>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="benefits" className="space-y-4">
+          <Card className="bg-gradient-card border-0 shadow-elegant backdrop-blur-sm">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-foreground">
+                <Heart className="w-5 h-5 text-primary" />
+                Health Benefits
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="flex items-start gap-3">
+                <CheckCircle className="w-5 h-5 text-green-500 mt-0.5" />
+                <p className="text-sm text-foreground">Complete protein source with all 9 essential amino acids</p>
+              </div>
+              <div className="flex items-start gap-3">
+                <CheckCircle className="w-5 h-5 text-green-500 mt-0.5" />
+                <p className="text-sm text-foreground">Rich in antioxidants and flavonoids</p>
+              </div>
+              <div className="flex items-start gap-3">
+                <CheckCircle className="w-5 h-5 text-green-500 mt-0.5" />
+                <p className="text-sm text-foreground">Supports digestive health with natural fiber</p>
+              </div>
+              <div className="flex items-start gap-3">
+                <CheckCircle className="w-5 h-5 text-green-500 mt-0.5" />
+                <p className="text-sm text-foreground">Gluten-free and easily digestible</p>
               </div>
             </CardContent>
           </Card>
-        )}
+        </TabsContent>
+      </Tabs>
 
-        {/* Detailed Analysis */}
-        <Tabs defaultValue="nutrition" className="space-y-4">
-          <TabsList className="grid w-full grid-cols-3 bg-secondary/50">
-            <TabsTrigger value="nutrition">Nutrition</TabsTrigger>
-            <TabsTrigger value="ayurvedic">Ayurvedic</TabsTrigger>
-            <TabsTrigger value="benefits">Benefits</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="nutrition" className="space-y-4">
-            <Card className="bg-gradient-card border-0 shadow-card">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-foreground">
-                  <TrendingUp className="w-5 h-5 text-primary" />
-                  Nutritional Profile
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {nutritionalData.map((nutrient, index) => (
-                  <div key={index} className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-foreground font-medium">{nutrient.label}</span>
-                      <span className="text-muted-foreground">
-                        {nutrient.value}{nutrient.unit} ({nutrient.daily}% DV)
-                      </span>
-                    </div>
-                    <Progress value={nutrient.daily} className="h-2" />
-                  </div>
-                ))}
-                <div className="pt-2 border-t border-border">
-                  <p className="text-xs text-muted-foreground">
-                    *Based on WHO/FAO daily value recommendations
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="ayurvedic" className="space-y-4">
-            <Card className="bg-gradient-card border-0 shadow-card">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-foreground">
-                  <Leaf className="w-5 h-5 text-primary" />
-                  Ancient Wisdom Analysis
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {ayurvedicInsights.map((insight, index) => (
-                  <div key={index} className="flex items-start gap-4 p-4 rounded-lg bg-secondary/30">
-                    <span className="text-2xl">{insight.icon}</span>
-                    <div className="flex-1">
-                      <h4 className="font-medium text-foreground mb-1">{insight.aspect}</h4>
-                      <p className="text-sm text-primary font-medium mb-1">{insight.value}</p>
-                      <p className="text-xs text-muted-foreground">{insight.impact}</p>
-                    </div>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="benefits" className="space-y-4">
-            <Card className="bg-gradient-card border-0 shadow-card">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-foreground">
-                  <Heart className="w-5 h-5 text-primary" />
-                  Health Benefits
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {healthBenefits.map((benefit, index) => (
-                  <div key={index} className="flex items-start gap-3">
-                    <div className="w-2 h-2 bg-primary rounded-full mt-2" />
-                    <p className="text-sm text-foreground">{benefit}</p>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
-
-        {/* Action Buttons */}
-        <div className="grid grid-cols-2 gap-4 mt-6">
-          <Button 
-            variant="outline" 
-            className="bg-background"
-            onClick={() => navigate('/scanner')}
-          >
-            Scan Another
-          </Button>
-          <Button 
-            className="bg-gradient-primary"
-            onClick={() => navigate('/dashboard')}
-          >
-            Back to Dashboard
-          </Button>
-        </div>
+      {/* Action Buttons */}
+      <div className="grid grid-cols-2 gap-4">
+        <Button 
+          variant="outline" 
+          className="h-12 font-semibold"
+          onClick={() => navigate('/scanner')}
+        >
+          <Camera className="w-4 h-4 mr-2" />
+          Scan Another
+        </Button>
+        <Button 
+          className="h-12 bg-gradient-to-r from-primary to-accent text-white font-semibold"
+          onClick={() => navigate('/dashboard')}
+        >
+          <Home className="w-4 h-4 mr-2" />
+          Back Home
+        </Button>
       </div>
     </div>
   );

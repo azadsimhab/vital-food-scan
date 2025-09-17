@@ -1,15 +1,19 @@
 import { useState } from "react";
-import { Camera, Search, TrendingUp, Heart, Leaf, Star } from "lucide-react";
+import { Camera, Search, TrendingUp, Heart, Leaf, Star, Plus, Zap, Target, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useNavigate } from "react-router-dom";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 
 const Dashboard = () => {
   const [scannedToday] = useState(3);
   const [compatibilityScore] = useState(78);
+  const [dailyStreak] = useState(12);
+  const [aiScore] = useState(92);
+  const [scanModalOpen, setScanModalOpen] = useState(false);
   const navigate = useNavigate();
   const { elementRef: statsRef, isVisible: statsVisible } = useIntersectionObserver();
   const { elementRef: insightsRef, isVisible: insightsVisible } = useIntersectionObserver();
@@ -27,87 +31,148 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-secondary/20 to-background p-4 pb-20">
-      {/* Header */}
-      <header className="flex items-center justify-between mb-6 pt-12" role="banner">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">Namaste 🙏</h1>
-          <p className="text-muted-foreground">Your wellness journey continues</p>
+    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-accent/5 p-4 pb-20">
+      {/* Modern Header */}
+      <header className="flex items-center justify-between mb-8 pt-12" role="banner">
+        <div className="flex items-center gap-4">
+          <div className="relative">
+            <div className="w-14 h-14 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center shadow-elegant">
+              <span className="text-primary-foreground font-bold text-lg" aria-hidden="true">AK</span>
+            </div>
+            <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-background"></div>
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-foreground">Good morning, Arjun</h1>
+            <p className="text-muted-foreground text-sm">Today's wellness score: 92% ✨</p>
+          </div>
         </div>
-        <button 
-          className="w-12 h-12 bg-gradient-primary rounded-full flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-transform duration-200 hover:scale-105"
-          aria-label="User profile"
+        <Button
+          variant="ghost"
+          size="icon"
+          className="relative"
           onClick={() => navigate('/profile')}
         >
-          <span className="text-primary-foreground font-semibold" aria-hidden="true">AK</span>
-        </button>
+          <Bell className="w-5 h-5" />
+          <div className="absolute -top-1 -right-1 w-3 h-3 bg-accent rounded-full"></div>
+        </Button>
       </header>
 
-      {/* Quick Stats */}
+      {/* Today's Scores */}
       <section 
         ref={statsRef as any}
         className={`grid grid-cols-2 gap-4 mb-6 transition-all duration-700 ${
           statsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
         }`}
-        aria-label="Daily statistics"
+        aria-label="Today's wellness scores"
       >
-        <Card className="bg-gradient-card border-0 shadow-card">
-          <CardContent className="p-4">
+        <Card className="bg-gradient-to-br from-primary/10 to-primary/5 border-0 shadow-elegant backdrop-blur-sm">
+          <CardContent className="p-5">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center" aria-hidden="true">
-                <Camera className="w-5 h-5 text-primary" />
+              <div className="w-12 h-12 bg-gradient-to-br from-primary to-primary/80 rounded-xl flex items-center justify-center shadow-md" aria-hidden="true">
+                <Zap className="w-6 h-6 text-primary-foreground" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-foreground" aria-label={`${scannedToday} scans completed today`}>
-                  {scannedToday}
+                <p className="text-3xl font-bold text-foreground mb-1" aria-label={`${dailyStreak} day streak`}>
+                  {dailyStreak}
                 </p>
-                <p className="text-sm text-muted-foreground">Scans today</p>
+                <p className="text-sm text-muted-foreground">Day streak</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-card border-0 shadow-card">
-          <CardContent className="p-4">
+        <Card className="bg-gradient-to-br from-accent/10 to-accent/5 border-0 shadow-elegant backdrop-blur-sm">
+          <CardContent className="p-5">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-accent/10 rounded-lg flex items-center justify-center" aria-hidden="true">
-                <Star className="w-5 h-5 text-accent" />
+              <div className="w-12 h-12 bg-gradient-to-br from-accent to-accent/80 rounded-xl flex items-center justify-center shadow-md" aria-hidden="true">
+                <Target className="w-6 h-6 text-white" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-foreground" aria-label={`${compatibilityScore}% food compatibility score`}>
-                  {compatibilityScore}%
+                <p className="text-3xl font-bold text-foreground mb-1" aria-label={`${aiScore}% AI nutrition score`}>
+                  {aiScore}%
                 </p>
-                <p className="text-sm text-muted-foreground">Compatibility</p>
+                <p className="text-sm text-muted-foreground">AI Score</p>
               </div>
             </div>
           </CardContent>
         </Card>
       </section>
 
-      {/* Scan Button */}
-      <Card className="bg-gradient-primary border-0 shadow-float mb-6 overflow-hidden relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-transparent" aria-hidden="true" />
-        <CardContent className="p-6 relative">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-lg font-semibold text-primary-foreground mb-1">
-                Scan Your Food
-              </h2>
-              <p className="text-primary-foreground/80 text-sm">
-                Discover ancient wisdom for modern nutrition
-              </p>
+      {/* Daily Nutrition AI Card */}
+      <Card className="bg-gradient-to-r from-background to-secondary/10 border-0 shadow-elegant mb-6 backdrop-blur-sm">
+        <CardContent className="p-6">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center">
+                <Heart className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-foreground">Daily Nutrition AI</h3>
+                <p className="text-sm text-muted-foreground">Personalized insights</p>
+              </div>
             </div>
-            <Button 
-              size="lg" 
-              onClick={() => navigate('/scanner')}
-              className="bg-white/20 hover:bg-white/30 text-primary-foreground border-white/30 rounded-full w-16 h-16 transition-transform duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-primary"
-              aria-label="Start scanning food products"
-            >
-              <Camera className="w-8 h-8" aria-hidden="true" />
-            </Button>
+            <Badge className="bg-primary/10 text-primary border-primary/20">Active</Badge>
+          </div>
+          <div className="space-y-3">
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-muted-foreground">Protein intake</span>
+              <span className="text-sm font-medium text-foreground">78% of goal</span>
+            </div>
+            <Progress value={78} className="h-2" />
+            <p className="text-xs text-muted-foreground">Great progress! Add 15g more protein for optimal balance.</p>
           </div>
         </CardContent>
       </Card>
+
+      {/* Enhanced Floating Scan Button */}
+      <div className="fixed bottom-24 right-6 z-40">
+        <Dialog open={scanModalOpen} onOpenChange={setScanModalOpen}>
+          <DialogTrigger asChild>
+            <Button 
+              size="lg" 
+              className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-accent shadow-float hover:shadow-glow transition-all duration-300 hover:scale-110 border-0"
+              aria-label="Scan food options"
+            >
+              <Plus className="w-8 h-8 text-white" aria-hidden="true" />
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-md bg-background/95 backdrop-blur-md border-0 shadow-elegant">
+            <DialogHeader>
+              <DialogTitle className="text-center text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                Choose Scan Method
+              </DialogTitle>
+            </DialogHeader>
+            <div className="grid gap-4 py-6">
+              <Button 
+                onClick={() => {
+                  setScanModalOpen(false);
+                  navigate('/scanner');
+                }}
+                className="h-16 bg-gradient-to-r from-primary/10 to-primary/5 hover:from-primary/20 hover:to-primary/10 border border-primary/20 text-foreground"
+              >
+                <Camera className="w-6 h-6 mr-3" />
+                <div className="text-left">
+                  <div className="font-semibold">Camera Scan</div>
+                  <div className="text-sm text-muted-foreground">Instant food analysis</div>
+                </div>
+              </Button>
+              <Button 
+                onClick={() => {
+                  setScanModalOpen(false);
+                  navigate('/scanner?mode=barcode');
+                }}
+                className="h-16 bg-gradient-to-r from-accent/10 to-accent/5 hover:from-accent/20 hover:to-accent/10 border border-accent/20 text-foreground"
+              >
+                <Search className="w-6 h-6 mr-3" />
+                <div className="text-left">
+                  <div className="font-semibold">Barcode Scan</div>
+                  <div className="text-sm text-muted-foreground">Quick product lookup</div>
+                </div>
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+      </div>
 
       {/* Ayurvedic Insights */}
       <section 

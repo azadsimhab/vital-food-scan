@@ -1,183 +1,213 @@
-import { Search, Filter, TrendingUp, Star, Clock, Zap } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { Search, Filter, Star, Leaf, Heart, Thermometer, Droplets, Wind } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 
 const Explore = () => {
-  const trendingFoods = [
-    { name: "Golden Milk Powder", compatibility: 94, category: "Beverages", trending: "+12%" },
-    { name: "Organic Ghee", compatibility: 89, category: "Dairy", trending: "+8%" },
-    { name: "Turmeric Supplements", compatibility: 92, category: "Supplements", trending: "+15%" },
-    { name: "Ashwagandha Tea", compatibility: 87, category: "Herbs", trending: "+22%" }
+  const [selectedFood, setSelectedFood] = useState("");
+  const [selectedTemperature, setSelectedTemperature] = useState("");
+  const [showResults, setShowResults] = useState(false);
+  const { elementRef: categoriesRef, isVisible: categoriesVisible } = useIntersectionObserver();
+  const { elementRef: trendsRef, isVisible: trendsVisible } = useIntersectionObserver();
+
+  const temperatures = [
+    { name: "Hot", icon: Thermometer, color: "from-red-500 to-orange-500", description: "Warming foods" },
+    { name: "Cold", icon: Droplets, color: "from-blue-500 to-cyan-500", description: "Cooling foods" },
+    { name: "Neutral", icon: Wind, color: "from-gray-500 to-slate-500", description: "Balanced foods" }
   ];
 
-  const categories = [
-    { name: "Grains & Cereals", count: 234, icon: "🌾", color: "bg-yellow-100 text-yellow-800" },
-    { name: "Herbs & Spices", count: 189, icon: "🌿", color: "bg-green-100 text-green-800" },
-    { name: "Dairy Products", count: 156, icon: "🥛", color: "bg-blue-100 text-blue-800" },
-    { name: "Vegetables", count: 287, icon: "🥕", color: "bg-orange-100 text-orange-800" },
-    { name: "Fruits", count: 203, icon: "🍎", color: "bg-red-100 text-red-800" },
-    { name: "Legumes", count: 145, icon: "🫘", color: "bg-purple-100 text-purple-800" }
-  ];
-
-  const recentlyScanned = [
-    { name: "Quinoa Pasta", time: "2 hours ago", compatibility: 85 },
-    { name: "Coconut Oil", time: "1 day ago", compatibility: 91 },
-    { name: "Himalayan Salt", time: "2 days ago", compatibility: 78 }
-  ];
-
-  const ayurvedicTips = [
-    {
-      title: "Morning Rituals",
-      description: "Start your day with warm water and lemon to kindle Agni",
-      icon: "🌅"
-    },
-    {
-      title: "Seasonal Eating",
-      description: "Align your diet with nature's cycles for optimal health",
-      icon: "🍂"
-    },
-    {
-      title: "Mindful Consumption",
-      description: "Eat with awareness and gratitude for better digestion",
-      icon: "🧘‍♀️"
+  const handleCompatibilityCheck = () => {
+    if (selectedFood && selectedTemperature) {
+      setShowResults(true);
     }
-  ];
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-secondary/20 to-background p-4 pb-20">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-background to-purple-50 p-4 pb-20">
       {/* Header */}
-      <div className="pt-12 mb-6">
-        <h1 className="text-2xl font-bold text-foreground mb-4">Explore Food Wisdom</h1>
-        
-        {/* Search Bar */}
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-          <Input 
-            placeholder="Search foods, ingredients, brands..." 
-            className="pl-10 pr-12 bg-background border-border"
-          />
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            className="absolute right-1 top-1/2 transform -translate-y-1/2"
-          >
-            <Filter className="w-4 h-4" />
-          </Button>
+      <header className="mb-8 pt-12">
+        <div className="text-center mb-6">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-orange-600 to-purple-600 bg-clip-text text-transparent mb-2">
+            Food Compatibility
+          </h1>
+          <p className="text-muted-foreground">Discover Ayurvedic harmony between foods</p>
         </div>
+      </header>
+
+      {/* Ayurvedic Food Compatibility Interface */}
+      <div className="space-y-6 mb-8">
+        {/* Food Input Card */}
+        <Card className="bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200 shadow-elegant">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-orange-800">
+              <Leaf className="w-5 h-5" />
+              Select Food Item
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="relative">
+              <Search className="absolute left-3 top-3 w-4 h-4 text-orange-600" />
+              <Input 
+                placeholder="Enter food name (e.g., quinoa, almonds, yogurt)"
+                className="pl-10 bg-white border-orange-200 focus:border-orange-400"
+                value={selectedFood}
+                onChange={(e) => setSelectedFood(e.target.value)}
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Temperature Selection */}
+        <Card className="bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200 shadow-elegant">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-purple-800">
+              <Thermometer className="w-5 h-5" />
+              Food Temperature Nature
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-3 gap-3">
+              {temperatures.map((temp) => (
+                <Button
+                  key={temp.name}
+                  variant={selectedTemperature === temp.name ? "default" : "outline"}
+                  className={`h-20 flex-col ${selectedTemperature === temp.name 
+                    ? `bg-gradient-to-br ${temp.color} text-white border-0` 
+                    : 'border-purple-200 hover:border-purple-300'
+                  }`}
+                  onClick={() => setSelectedTemperature(temp.name)}
+                >
+                  <temp.icon className="w-6 h-6 mb-2" />
+                  <span className="font-medium">{temp.name}</span>
+                  <span className="text-xs opacity-80">{temp.description}</span>
+                </Button>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Check Compatibility Button */}
+        <Button 
+          onClick={handleCompatibilityCheck}
+          disabled={!selectedFood || !selectedTemperature}
+          className="w-full h-14 bg-gradient-to-r from-orange-500 to-purple-500 hover:from-orange-600 hover:to-purple-600 text-white font-semibold text-lg shadow-elegant"
+        >
+          Check Ayurvedic Compatibility
+        </Button>
       </div>
 
-      <Tabs defaultValue="trending" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-4 bg-secondary/50">
-          <TabsTrigger value="trending">Trending</TabsTrigger>
-          <TabsTrigger value="categories">Categories</TabsTrigger>
-          <TabsTrigger value="recent">Recent</TabsTrigger>
-          <TabsTrigger value="tips">Tips</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="trending" className="space-y-4">
-          <Card className="bg-gradient-card border-0 shadow-card">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-foreground">
-                <TrendingUp className="w-5 h-5 text-primary" />
-                Trending This Week
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {trendingFoods.map((food, index) => (
-                <div key={index} className="flex items-center justify-between p-3 rounded-lg bg-background/50 hover:bg-background/80 transition-colors cursor-pointer">
-                  <div className="flex-1">
-                    <h4 className="font-medium text-foreground">{food.name}</h4>
-                    <div className="flex items-center gap-2 mt-1">
-                      <Badge variant="secondary" className="text-xs">{food.category}</Badge>
-                      <span className="text-xs text-green-600 font-medium flex items-center gap-1">
-                        <TrendingUp className="w-3 h-3" />
-                        {food.trending}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="flex items-center gap-1">
-                      <Star className="w-4 h-4 text-primary" />
-                      <span className="text-sm font-medium text-foreground">{food.compatibility}%</span>
-                    </div>
-                  </div>
+      {/* Results Modal */}
+      <Dialog open={showResults} onOpenChange={setShowResults}>
+        <DialogContent className="sm:max-w-md bg-background/95 backdrop-blur-md border-0 shadow-elegant">
+          <DialogHeader>
+            <DialogTitle className="text-center text-xl font-bold bg-gradient-to-r from-orange-600 to-purple-600 bg-clip-text text-transparent">
+              Compatibility Results
+            </DialogTitle>
+          </DialogHeader>
+          <div className="py-6 space-y-4">
+            <div className="text-center">
+              <div className="w-20 h-20 mx-auto bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center mb-4">
+                <span className="text-2xl font-bold text-white">89%</span>
+              </div>
+              <h3 className="font-semibold text-lg text-foreground mb-2">Excellent Compatibility!</h3>
+              <p className="text-muted-foreground text-sm">
+                {selectedFood} with {selectedTemperature.toLowerCase()} nature creates harmony for your dosha type.
+              </p>
+            </div>
+            <div className="space-y-3 pt-4 border-t">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                  <Heart className="w-4 h-4 text-green-600" />
                 </div>
-              ))}
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="categories" className="space-y-4">
-          <div className="grid grid-cols-2 gap-3">
-            {categories.map((category, index) => (
-              <Card key={index} className="bg-gradient-card border-0 shadow-card hover:shadow-float transition-all cursor-pointer">
-                <CardContent className="p-4 text-center">
-                  <span className="text-3xl mb-2 block">{category.icon}</span>
-                  <h3 className="font-medium text-foreground mb-1">{category.name}</h3>
-                  <Badge className={`text-xs ${category.color}`}>
-                    {category.count} items
-                  </Badge>
-                </CardContent>
-              </Card>
-            ))}
+                <span className="text-sm text-foreground">Supports digestive fire (Agni)</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                  <Droplets className="w-4 h-4 text-blue-600" />
+                </div>
+                <span className="text-sm text-foreground">Balances your dominant dosha</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                  <Star className="w-4 h-4 text-purple-600" />
+                </div>
+                <span className="text-sm text-foreground">Enhances overall vitality</span>
+              </div>
+            </div>
           </div>
-        </TabsContent>
+        </DialogContent>
+      </Dialog>
 
-        <TabsContent value="recent" className="space-y-4">
-          <Card className="bg-gradient-card border-0 shadow-card">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-foreground">
-                <Clock className="w-5 h-5 text-primary" />
-                Recently Scanned
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {recentlyScanned.map((item, index) => (
-                <div key={index} className="flex items-center justify-between p-3 rounded-lg bg-background/50">
-                  <div>
-                    <h4 className="font-medium text-foreground">{item.name}</h4>
-                    <p className="text-sm text-muted-foreground">{item.time}</p>
+      {/* Featured Foods Section */}
+      <section 
+        ref={categoriesRef as any}
+        className={`transition-all duration-700 ${
+          categoriesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+        }`}
+      >
+        <Card className="bg-gradient-card border-0 shadow-elegant mb-6 backdrop-blur-sm">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-foreground">
+              <Star className="w-5 h-5 text-primary" />
+              Featured Ayurvedic Foods
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 gap-4">
+              {[
+                { name: "Golden Turmeric", score: 96, dosha: "Tri-Dosha", color: "from-yellow-400 to-orange-500" },
+                { name: "Sacred Ghee", score: 94, dosha: "Vata Balance", color: "from-yellow-300 to-yellow-500" },
+                { name: "Holy Basil", score: 92, dosha: "Kapha Support", color: "from-green-400 to-green-600" },
+                { name: "Ginger Root", score: 90, dosha: "Pitta Harmony", color: "from-orange-400 to-red-500" }
+              ].map((food, index) => (
+                <div key={index} className="p-4 rounded-xl bg-background/50 border border-border/50">
+                  <div className={`w-full h-20 bg-gradient-to-br ${food.color} rounded-lg mb-3 flex items-center justify-center`}>
+                    <span className="text-white font-bold text-lg">{food.score}%</span>
                   </div>
-                  <Badge className="bg-primary/10 text-primary">
-                    {item.compatibility}%
-                  </Badge>
+                  <h4 className="font-medium text-foreground mb-1">{food.name}</h4>
+                  <Badge className="text-xs" variant="secondary">{food.dosha}</Badge>
                 </div>
               ))}
-              <Button variant="outline" className="w-full mt-4">
-                View All History
-              </Button>
-            </CardContent>
-          </Card>
-        </TabsContent>
+            </div>
+          </CardContent>
+        </Card>
+      </section>
 
-        <TabsContent value="tips" className="space-y-4">
-          <Card className="bg-gradient-card border-0 shadow-card">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-foreground">
-                <Zap className="w-5 h-5 text-primary" />
-                Ayurvedic Wisdom
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {ayurvedicTips.map((tip, index) => (
-                <div key={index} className="flex items-start gap-4 p-4 rounded-lg bg-secondary/30">
-                  <span className="text-2xl">{tip.icon}</span>
-                  <div>
-                    <h4 className="font-medium text-foreground mb-1">{tip.title}</h4>
-                    <p className="text-sm text-muted-foreground">{tip.description}</p>
-                  </div>
+      {/* Ayurvedic Wisdom Tips */}
+      <section 
+        ref={trendsRef as any}
+        className={`transition-all duration-700 ${
+          trendsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+        }`}
+      >
+        <Card className="bg-gradient-card border-0 shadow-elegant backdrop-blur-sm">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-foreground">
+              <Leaf className="w-5 h-5 text-primary" />
+              Ancient Wisdom
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {[
+              { icon: "🌅", title: "Morning Rituals", tip: "Begin with warm water and lemon to awaken Agni" },
+              { icon: "🍂", title: "Seasonal Harmony", tip: "Eat foods that balance the current season's influence" },
+              { icon: "🧘‍♀️", title: "Mindful Eating", tip: "Chew slowly and eat in a peaceful environment" }
+            ].map((wisdom, index) => (
+              <div key={index} className="flex items-start gap-4 p-4 rounded-xl bg-background/30">
+                <span className="text-2xl">{wisdom.icon}</span>
+                <div>
+                  <h4 className="font-medium text-foreground mb-1">{wisdom.title}</h4>
+                  <p className="text-sm text-muted-foreground">{wisdom.tip}</p>
                 </div>
-              ))}
-              <Button variant="outline" className="w-full mt-4">
-                Explore More Wisdom
-              </Button>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      </section>
     </div>
   );
 };
