@@ -4,10 +4,9 @@ import { NavLink } from "react-router-dom";
 const BottomNavigation = () => {
   const navItems = [
     { icon: Home, label: "Home", path: "/dashboard" },
-    { icon: Search, label: "Explore", path: "/explore" },
-    { icon: Camera, label: "Scan", path: "/scanner" },
-    { icon: Leaf, label: "Insights", path: "/insights" },
-    { icon: User, label: "Profile", path: "/profile" }
+    { icon: Search, label: "Today", path: "/insights" },
+    { icon: Camera, label: "Compare", path: "/explore" },
+    { icon: User, label: "More", path: "/profile" }
   ];
 
   return (
@@ -34,6 +33,17 @@ const BottomNavigation = () => {
             <span className="text-xs font-medium truncate">{item.label}</span>
           </NavLink>
         ))}
+        
+        {/* Central Scan Button */}
+        <NavLink
+          to="/scanner"
+          className="absolute left-1/2 transform -translate-x-1/2 -translate-y-4"
+          aria-label="Scan food"
+        >
+          <div className="w-14 h-14 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center shadow-elegant hover:scale-105 transition-transform">
+            <Camera className="w-6 h-6 text-white" />
+          </div>
+        </NavLink>
       </div>
     </nav>
   );

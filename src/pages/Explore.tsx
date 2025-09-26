@@ -29,74 +29,125 @@ const Explore = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-background to-purple-50 p-4 pb-20">
       {/* Header */}
-      <header className="mb-8 pt-12">
-        <div className="text-center mb-6">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-orange-600 to-purple-600 bg-clip-text text-transparent mb-2">
-            Food Compatibility
-          </h1>
-          <p className="text-muted-foreground">Discover Ayurvedic harmony between foods</p>
+      <header className="bg-gradient-to-r from-orange-500 to-orange-600 p-4 rounded-2xl mb-6 mt-4">
+        <div className="flex items-center gap-4 text-white">
+          <Button variant="ghost" size="sm" className="h-10 w-10 text-white hover:bg-white/20">
+            <span className="text-xl">←</span>
+          </Button>
+          <div className="flex-1">
+            <h1 className="text-lg font-bold">EatWisely Bro - Ayurvedic Food Compatibility</h1>
+            <p className="text-sm text-orange-100">Traditional dietary wisdom with temperature analysis</p>
+          </div>
+          <Button variant="ghost" size="sm" className="h-10 w-10 text-white hover:bg-white/20">
+            <span className="text-xl">↓</span>
+          </Button>
         </div>
       </header>
 
-      {/* Ayurvedic Food Compatibility Interface */}
-      <div className="space-y-6 mb-8">
-        {/* Food Input Card */}
+      {/* Main Compatibility Card */}
+      <Card className="bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200 shadow-elegant mb-6">
+        <CardContent className="p-6 text-center">
+          <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span className="text-white text-2xl">↓</span>
+          </div>
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <div className="w-6 h-6 bg-purple-500 rounded flex items-center justify-center">
+              <span className="text-white text-sm">🔮</span>
+            </div>
+            <h2 className="text-xl font-bold text-orange-800">Ayurvedic Food Compatibility</h2>
+          </div>
+          <p className="text-orange-700 text-sm">
+            Analyze food combinations with temperature consideration using traditional Indian dietary wisdom
+          </p>
+        </CardContent>
+      </Card>
+
+      {/* Food Comparison Interface */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        {/* First Food Card */}
         <Card className="bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200 shadow-elegant">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-orange-800">
-              <Leaf className="w-5 h-5" />
-              Select Food Item
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="relative">
-              <Search className="absolute left-3 top-3 w-4 h-4 text-orange-600" />
-              <Input 
-                placeholder="Enter food name (e.g., quinoa, almonds, yogurt)"
-                className="pl-10 bg-white border-orange-200 focus:border-orange-400"
-                value={selectedFood}
-                onChange={(e) => setSelectedFood(e.target.value)}
-              />
+          <CardContent className="p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold">1</div>
+              <h3 className="font-bold text-orange-800">First Food</h3>
             </div>
-          </CardContent>
-        </Card>
-
-        {/* Temperature Selection */}
-        <Card className="bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200 shadow-elegant">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-purple-800">
-              <Thermometer className="w-5 h-5" />
-              Food Temperature Nature
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-3 gap-3">
-              {temperatures.map((temp) => (
+            <Input 
+              placeholder="Enter food name..."
+              className="mb-4 bg-white border-orange-200 focus:border-orange-400"
+              value={selectedFood}
+              onChange={(e) => setSelectedFood(e.target.value)}
+            />
+            <div>
+              <p className="text-sm font-medium text-orange-700 mb-2">Temperature:</p>
+              <div className="flex gap-2">
                 <Button
-                  key={temp.name}
-                  variant={selectedTemperature === temp.name ? "default" : "outline"}
-                  className={`h-20 flex-col ${selectedTemperature === temp.name 
-                    ? `bg-gradient-to-br ${temp.color} text-white border-0` 
-                    : 'border-purple-200 hover:border-purple-300'
-                  }`}
-                  onClick={() => setSelectedTemperature(temp.name)}
+                  size="sm"
+                  variant={selectedTemperature === "Hot" ? "default" : "outline"}
+                  className={selectedTemperature === "Hot" 
+                    ? "bg-orange-500 text-white border-0" 
+                    : "border-orange-200 text-orange-600"
+                  }
+                  onClick={() => setSelectedTemperature("Hot")}
                 >
-                  <temp.icon className="w-6 h-6 mb-2" />
-                  <span className="font-medium">{temp.name}</span>
-                  <span className="text-xs opacity-80">{temp.description}</span>
+                  🔥 Hot
                 </Button>
-              ))}
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="border-orange-200 text-orange-600 opacity-50"
+                >
+                  ❄️ Cold
+                </Button>
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* Check Compatibility Button */}
+        {/* Second Food Card */}
+        <Card className="bg-gradient-to-br from-gray-50 to-gray-100 border-gray-200 shadow-elegant">
+          <CardContent className="p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-8 h-8 bg-gray-500 rounded-full flex items-center justify-center text-white font-bold">2</div>
+              <h3 className="font-bold text-gray-800">Second Food</h3>
+            </div>
+            <Input 
+              placeholder="Enter food name..."
+              className="mb-4 bg-white border-gray-200 focus:border-gray-400"
+            />
+            <div>
+              <p className="text-sm font-medium text-gray-700 mb-2">Temperature:</p>
+              <div className="flex gap-2">
+                <Button
+                  size="sm"
+                  variant="default"
+                  className="bg-orange-500 text-white border-0"
+                >
+                  🔥 Hot
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="border-gray-200 text-gray-600 opacity-50"
+                >
+                  ❄️ Cold
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Analyze Button */}
+      <div className="mb-6">
+        <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex items-center justify-center mx-auto mb-4">
+          <span className="text-white text-2xl">↓</span>
+        </div>
         <Button 
           onClick={handleCompatibilityCheck}
-          disabled={!selectedFood || !selectedTemperature}
-          className="w-full h-14 bg-gradient-to-r from-orange-500 to-purple-500 hover:from-orange-600 hover:to-purple-600 text-white font-semibold text-lg shadow-elegant"
+          disabled={!selectedFood}
+          className="w-full h-14 bg-gray-500 hover:bg-gray-600 text-white font-semibold text-lg"
         >
-          Check Ayurvedic Compatibility
+          ↓ Analyze Compatibility
         </Button>
       </div>
 
