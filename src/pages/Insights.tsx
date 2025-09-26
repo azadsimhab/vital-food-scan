@@ -28,38 +28,35 @@ const Insights = () => {
     <div className="min-h-screen bg-gradient-to-br from-accent/5 via-background to-primary/5 p-4 pb-20">
       {/* Header */}
       <header className="mb-8 pt-12">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-foreground">Today's Journey</h1>
-          <Button variant="ghost" size="sm" className="h-8 w-8 rounded-full">
-            <span className="text-orange-500">🔄</span>
-          </Button>
+        <div className="text-center mb-6">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent mb-2">
+            Your Wellness Journey
+          </h1>
+          <p className="text-muted-foreground">Tracking your path to optimal health</p>
         </div>
       </header>
 
-      {/* Central Scan Button */}
-      <div className="flex flex-col items-center justify-center py-16 mb-8">
-        <div className="w-32 h-32 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex items-center justify-center shadow-elegant mb-8">
-          <Search className="w-16 h-16 text-white" />
-        </div>
-        <h2 className="text-2xl font-bold text-foreground mb-4">Start Your Food Journey</h2>
-        <p className="text-center text-muted-foreground mb-8 max-w-sm">
-          No scans today yet. Start scanning food products to discover their Ayurvedic properties and build your wellness journey.
-        </p>
-      </div>
-
-      {/* Tip Card */}
-      <Card className="bg-gradient-to-r from-yellow-50 to-orange-50 border-yellow-200 shadow-elegant mb-8">
-        <CardContent className="p-4">
-          <div className="flex items-start gap-3">
-            <div className="w-8 h-8 bg-yellow-500 rounded-lg flex items-center justify-center flex-shrink-0">
-              <span className="text-white text-lg">💡</span>
-            </div>
-            <p className="text-sm text-yellow-800">
-              Tap the scan button below to analyze your first food product
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Journey Metrics Cards */}
+      <section className="grid grid-cols-2 gap-4 mb-8">
+        {journeyMetrics.map((metric, index) => (
+          <Card key={index} className="bg-gradient-card border-0 shadow-elegant backdrop-blur-sm overflow-hidden">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between mb-3">
+                <div className={`w-10 h-10 bg-gradient-to-br ${metric.color} rounded-xl flex items-center justify-center shadow-md`}>
+                  <metric.icon className="w-5 h-5 text-white" />
+                </div>
+                <Badge variant="secondary" className="text-xs font-medium text-green-600 bg-green-50">
+                  {metric.growth}
+                </Badge>
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-foreground mb-1">{metric.value}</p>
+                <p className="text-sm text-muted-foreground">{metric.label}</p>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </section>
 
       {/* Enhanced Scan History */}
       <Card 

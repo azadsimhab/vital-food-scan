@@ -36,76 +36,90 @@ const Dashboard = () => {
       <header className="flex items-center justify-between mb-8 pt-12" role="banner">
         <div className="flex items-center gap-4">
           <div className="relative">
-            <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex items-center justify-center shadow-elegant">
-              <span className="text-white font-bold text-2xl" aria-hidden="true">O</span>
+            <div className="w-14 h-14 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center shadow-elegant">
+              <span className="text-primary-foreground font-bold text-lg" aria-hidden="true">AK</span>
             </div>
+            <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-background"></div>
           </div>
           <div>
-            <div className="text-sm text-muted-foreground mb-1">Hello,</div>
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-orange-600 to-orange-600 bg-clip-text text-transparent">
-              Oxygenyawh!
-            </h1>
-            <div className="flex items-center gap-2 mt-1">
-              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-              <span className="text-sm text-green-600 font-medium">Authenticated</span>
-            </div>
+            <h1 className="text-2xl font-bold text-foreground">Good morning, Arjun</h1>
+            <p className="text-muted-foreground text-sm">Today's wellness score: 92% ✨</p>
           </div>
         </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="relative"
+          onClick={() => navigate('/profile')}
+        >
+          <Bell className="w-5 h-5" />
+          <div className="absolute -top-1 -right-1 w-3 h-3 bg-accent rounded-full"></div>
+        </Button>
       </header>
 
-      {/* Today's Scores Card */}
-      <Card className="bg-background/95 backdrop-blur-sm border-0 shadow-elegant mb-6">
+      {/* Today's Scores */}
+      <section 
+        ref={statsRef as any}
+        className={`grid grid-cols-2 gap-4 mb-6 transition-all duration-700 ${
+          statsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+        }`}
+        aria-label="Today's wellness scores"
+      >
+        <Card className="bg-gradient-to-br from-primary/10 to-primary/5 border-0 shadow-elegant backdrop-blur-sm">
+          <CardContent className="p-5">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-primary to-primary/80 rounded-xl flex items-center justify-center shadow-md" aria-hidden="true">
+                <Zap className="w-6 h-6 text-primary-foreground" />
+              </div>
+              <div>
+                <p className="text-3xl font-bold text-foreground mb-1" aria-label={`${dailyStreak} day streak`}>
+                  {dailyStreak}
+                </p>
+                <p className="text-sm text-muted-foreground">Day streak</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gradient-to-br from-accent/10 to-accent/5 border-0 shadow-elegant backdrop-blur-sm">
+          <CardContent className="p-5">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-accent to-accent/80 rounded-xl flex items-center justify-center shadow-md" aria-hidden="true">
+                <Target className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <p className="text-3xl font-bold text-foreground mb-1" aria-label={`${aiScore}% AI nutrition score`}>
+                  {aiScore}%
+                </p>
+                <p className="text-sm text-muted-foreground">AI Score</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </section>
+
+      {/* Daily Nutrition AI Card */}
+      <Card className="bg-gradient-to-r from-background to-secondary/10 border-0 shadow-elegant mb-6 backdrop-blur-sm">
         <CardContent className="p-6">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-green-500 rounded-2xl flex items-center justify-center">
-              <TrendingUp className="w-6 h-6 text-white" />
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center">
+                <Heart className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-foreground">Daily Nutrition AI</h3>
+                <p className="text-sm text-muted-foreground">Personalized insights</p>
+              </div>
             </div>
-            <div className="flex-1">
-              <h3 className="font-bold text-lg text-foreground">Today's Scores</h3>
-              <p className="text-muted-foreground">High ~ Low</p>
-            </div>
-            <Button variant="ghost" size="sm" className="h-10 w-10 rounded-xl bg-green-50 hover:bg-green-100">
-              <span className="text-green-600">🔄</span>
-            </Button>
+            <Badge className="bg-primary/10 text-primary border-primary/20">Active</Badge>
           </div>
-        </CardContent>
-      </Card>
-
-      {/* Scan Area */}
-      <Card className="bg-background/95 backdrop-blur-sm border-0 shadow-elegant mb-6">
-        <CardContent className="p-8 text-center">
-          <div className="w-24 h-24 mx-auto mb-6 bg-gray-100 rounded-2xl flex items-center justify-center">
-            <Search className="w-12 h-12 text-gray-400" />
-          </div>
-          <h3 className="text-xl font-bold text-foreground mb-2">No scans today yet</h3>
-          <p className="text-muted-foreground mb-6">Start scanning to see your scores!</p>
-        </CardContent>
-      </Card>
-
-      {/* Daily Nutrition AI */}
-      <Card className="bg-gradient-to-br from-purple-100 to-purple-50 border-purple-200 shadow-elegant mb-6">
-        <CardContent className="p-6">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-purple-500 rounded-2xl flex items-center justify-center">
-              <Heart className="w-6 h-6 text-white" />
+          <div className="space-y-3">
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-muted-foreground">Protein intake</span>
+              <span className="text-sm font-medium text-foreground">78% of goal</span>
             </div>
-            <div className="flex-1">
-              <h3 className="font-bold text-lg text-purple-800">Daily Nutrition AI</h3>
-              <p className="text-purple-600 text-sm">Analyzed 0 products • Avg score: 0.0/100</p>
-            </div>
-            <Button variant="ghost" size="sm" className="h-10 w-10 rounded-xl bg-purple-50 hover:bg-purple-100">
-              <span className="text-purple-600">🔄</span>
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* WHO Health Alerts */}
-      <Card className="bg-red-50 border-red-200 shadow-elegant mb-6">
-        <CardContent className="p-4">
-          <div className="flex items-center gap-3">
-            <span className="text-red-600">⚠️</span>
-            <span className="font-medium text-red-800">WHO Health Alerts</span>
+            <Progress value={78} className="h-2" />
+            <p className="text-xs text-muted-foreground">Great progress! Add 15g more protein for optimal balance.</p>
           </div>
         </CardContent>
       </Card>
